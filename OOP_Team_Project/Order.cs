@@ -26,6 +26,7 @@ namespace OOP_Team_Project
         //4. 매소드 오버로딩
         public void AddItem(Menu item)
         {
+            orderId++;
             items.Add(item);
         }
         //4. 매소드 오버로딩
@@ -40,6 +41,12 @@ namespace OOP_Team_Project
         public void AddItem(List<Menu> itemList)
         {
             items.AddRange(itemList);
+        }
+
+        public void DeleteItem(Menu item)
+        {
+            
+            items.Remove(item);
         }
 
         // 람다식(Sum)

@@ -25,6 +25,10 @@
                     Console.Write("이용방식\n1. 매장이용\n2. 포장\n=> ");
                     string whereToEat = Console.ReadLine();
                     if (whereToEat == "q") break;
+                    else if (whereToEat != "1" && whereToEat != "2" && whereToEat != "q")
+                    {
+                        throw new Exception("잘못된 입력입니다.");
+                    }
                     Console.Clear();
                     Console.WriteLine("==============================================");
                     Console.WriteLine("=================고객정보확인=================");
@@ -60,12 +64,12 @@
                 }
                 catch (Exception ex)
                 {
+                    Console.Clear();
                     Console.WriteLine($"에러 발생: {ex.Message}");
                 }
                 finally
                 {
-                    Console.WriteLine("시스템: 첫 번째 주문 처리 종료.\n");
-                    
+                    //Console.WriteLine("시스템: 첫 번째 주문 처리 종료.\n");
                 }
                 //break;
             }

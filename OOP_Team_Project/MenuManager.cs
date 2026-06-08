@@ -7,13 +7,13 @@ namespace OOP_Team_Project
     public class MenuManager
     {
         private List<Coffee> coffeeMenus = new List<Coffee>();
-        private List<Dessert> dessertMenu = new List<Dessert>();
+        private List<Dessert> dessertMenus = new List<Dessert>();
 
         public MenuManager()
         {
-            coffeeMenus.Add(new Coffee(1, "아이스 아메리카노", 4000m, true, 0));
+            coffeeMenus.Add(new Coffee(1, "아메리카노", 4000m, true, 0));
 
-            dessertMenu.Add(new Dessert(1, "치즈 케이크", 6500m, new NutritionInfo(450, 30)));
+            dessertMenus.Add(new Dessert(1, "치즈 케이크", 6500m, new NutritionInfo(450, 30)));
         }
 
         public void PrintCoffeeMenu()
@@ -29,8 +29,13 @@ namespace OOP_Team_Project
 
         public void PrintDessertMenu()
         {
-            Console.WriteLine("- 커피 -");
-            dessertMenu.ForEach(item => item.PrintReceipt());
+            Console.WriteLine("- 디저트 -");
+            dessertMenus.ForEach(item => item.PrintReceipt());
+        }
+
+        public Dessert GetDessert(int id)
+        {
+            return dessertMenus.Find(m => m.Id == id);
         }
     }
 }
