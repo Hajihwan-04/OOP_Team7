@@ -4,10 +4,12 @@ using System.Text;
 
 namespace OOP_Team_Project
 {
+
+    public delegate void OrderCompletedHandler(string message);
     // 1. 일반 클래스 (1/10)
     public class Order
     {
-        private int orderId = 0;
+        private int orderCount = 0;
         private List<Menu> items = new List<Menu>(); // 21. 컬렉션
         public Customer OrderCustomer { get; set; }
         public bool whereToEat;
@@ -26,7 +28,7 @@ namespace OOP_Team_Project
         //4. 매소드 오버로딩
         public void AddItem(Menu item)
         {
-            orderId++;
+            orderCount++;
             items.Add(item);
         }
         //4. 매소드 오버로딩
@@ -43,10 +45,14 @@ namespace OOP_Team_Project
             items.AddRange(itemList);
         }
 
-        public void DeleteItem(Menu item)
+        public void DeleteItem(int index)
         {
-            
-            items.Remove(item);
+
+            if (index >= 0 && index < items.Count)
+            {
+                items.RemoveAt(index);
+                orderCount--;
+            }
         }
 
         // 람다식(Sum)
@@ -57,12 +63,34 @@ namespace OOP_Team_Project
 
         public void PrintOrder()
         {
-            Console.WriteLine("\n--- " + OrderCustomer.getName() + "님의 주문 내역 ---");
+            Console.WriteLine("\n--- " + OrderCustomer.GetName() + "님의 주문 내역 ---");
             items.ForEach(item => item.PrintReceipt()); // 람다식2
 
             CalculateTotal(out decimal total);
             Console.WriteLine("----------------------------");
             Console.WriteLine("총 금액: " + total.ToString("C"));
+        }
+
+        // 결제 처리 기능 (델리게이트 활용)
+        public void ProcessPayment(IPayable paymentMethod, OrderCompletedHandler callback)
+        {
+            if (items.Count == 0)
+            {
+                // throw 예외 강제 발생 만족
+                throw new InvalidOrderException("장바구니가 비어 있어 결제할 수 없습니다.");
+            }
+
+            CalculateTotal(out decimal total);
+            paymentMethod.Pay(total);
+
+            // 델리게이트 콜백 실행
+            callback?.Invoke($"{OrderCustomer.GetName()}님의 {total:C} 결제가 완료되었습니다!");
+            items.Clear(); // 결제 완료 후 장바구니 비우기
+        }
+
+        public int getOrderCount()
+        {
+            return orderCount;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace OOP_Team_Project
             id = id + 1;
         }
 
-        public string getName()
+        public string GetName()
         {
             return Name;
         }

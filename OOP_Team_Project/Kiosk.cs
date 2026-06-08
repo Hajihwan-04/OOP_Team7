@@ -14,11 +14,10 @@ namespace OOP_Team_Project
             this.menuManager = manager;
         }
 
-        public void StartOrder(Order myOrder)
+        public bool StartOrder(Order myOrder)
         {
             while (true)
             {
-                int stop = 0;
                 Console.WriteLine("==============================================");
                 Console.WriteLine("==================상품  주문==================");
                 Console.WriteLine("==============================================");
@@ -37,20 +36,16 @@ namespace OOP_Team_Project
                         break;
 
                     case 3:
-                        myOrder.PrintOrder();
-                        Console.WriteLine("0. 이전 페이지\n");
-                        int deleteItem = GetIntInput();
-                        if (deleteItem == 0) break;
-                        myOrder.DeleteItem(myOrder[deleteItem]);
+                        ManageCart(myOrder);
+                        break;
+                    case 4:
+                        Console.Clear();
+                        if (ProcessKioskPayment(myOrder)) return true; // 결제 성공 시 루프 종료
                         break;
                     default:
                         Console.WriteLine("주문 취소.");
-
-                        stop = 1;
-                        break;
-
+                        return false;
                 }
-                if (stop == 1) break;
             }
         }
 
@@ -70,6 +65,7 @@ namespace OOP_Team_Project
                 switch (kindOfBeverage)
                 {
                     case 1:
+                        Console.Clear();
                         menuManager.PrintCoffeeMenu();
                         Console.Write("\n원하는 음료 번호 선택 =>\n0) 이전 페이지\n");
                         int chooseCoffee = GetIntInput();
@@ -118,6 +114,54 @@ namespace OOP_Team_Project
                 return 0;
             }
             return inputI;
+        }
+
+        private void ManageCart(Order myOrder)
+        {
+            myOrder.PrintOrder();
+            if (myOrder.getOrderCount() == 0) return;
+
+            Console.Write("\n삭제하고 싶은 아이템의 인덱스 번호를 입력하세요 (취소는 -1) => ");
+            int deleteIndex = GetIntInput();
+            if (deleteIndex == -1) return;
+
+            if (deleteIndex >= 0 && deleteIndex < myOrder.getOrderCount())
+            {
+                myOrder.DeleteItem(deleteIndex);
+                Console.WriteLine("[시스템] 아이템이 삭제되었습니다.");
+            }
+            else
+            {
+                Console.WriteLine("[시스템] 잘못된 인덱스입니다.");
+            }
+        }
+
+        private bool ProcessKioskPayment(Order myOrder)
+        {
+            try
+            {
+                myOrder.PrintOrder();
+                Console.Write("\n결제 수단을 선택하세요 (1. 카드 / 2. 현금 / 0. 취소) => ");
+                int payChoice = GetIntInput();
+
+                IPayable payment = null;
+                if (payChoice == 1) payment = new CardPayment();
+                else if (payChoice == 2) payment = new CashPayment();
+                else return false;
+
+                myOrder.ProcessPayment(payment, (msg) => {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine($"\n🎉 {msg} 🎉");
+                    Console.ResetColor();
+                });
+
+                return true;
+            }
+            catch (InvalidOrderException ex) // 💥 의미 있는 사용자 정의 예외 처리 
+            {
+                Console.WriteLine($"[결제 실패] {ex.Message}");
+                 return false;
+            }
         }
     }
 }

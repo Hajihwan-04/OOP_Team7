@@ -5,12 +5,11 @@ using System.Text;
 namespace OOP_Team_Project
 {
     //10. 추상 클래스 1개 이상
-    public abstract class Menu
+    public abstract class Menu : IPrintable, IComparable<Menu>
     {
         protected int id;
         protected string name = "";
         protected decimal price;
-        private int stock;
 
         public Menu(int id, string name, decimal price)
         {
@@ -34,6 +33,12 @@ namespace OOP_Team_Project
         public void PrintReceipt()
         {
             Console.WriteLine(id + ") {0,-15} {1,10}", name, CalculatePrice().ToString("C"));
+        }
+
+        public int CompareTo(Menu other)
+        {
+            if (other == null) return 1;
+            return this.CalculatePrice().CompareTo(other.CalculatePrice());
         }
 
         public int Id
