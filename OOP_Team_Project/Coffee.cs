@@ -24,7 +24,7 @@ namespace OOP_Team_Project
         public override void DisplayInfo()
         {
             base.DisplayInfo();
-            Console.WriteLine("└ 샷 추가: " + shotCount + "번 (최종가: " + CalculatePrice().ToString("C") + ")");
+            Console.WriteLine("└ 샷 추가: " + shotCount + "번 (최종가: " + CalculatePrice().ToString("#,#0") + "원)");
         }
     }
 }

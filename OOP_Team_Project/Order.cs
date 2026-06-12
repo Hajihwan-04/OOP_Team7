@@ -68,7 +68,7 @@ namespace OOP_Team_Project
 
             CalculateTotal(out decimal total);
             Console.WriteLine("----------------------------");
-            Console.WriteLine("총 금액: " + total.ToString("C"));
+            Console.WriteLine("총 금액: " + total.ToString("#,#0") + " 원");
         }
 
         // 결제 처리 기능 (델리게이트 활용)

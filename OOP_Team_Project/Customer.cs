@@ -22,11 +22,5 @@ namespace OOP_Team_Project
             return Name;
         }
 
-        
-
-        //public void MakeOrder(Order order)
-        //{
-
-        //}
     }
 }

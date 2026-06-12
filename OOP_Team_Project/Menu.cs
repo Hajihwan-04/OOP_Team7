@@ -32,7 +32,7 @@ namespace OOP_Team_Project
 
         public void PrintReceipt()
         {
-            Console.WriteLine(id + ") {0,-15} {1,10}", name, CalculatePrice().ToString("C"));
+            Console.WriteLine(id + ") {0,-15} {1,10} 원", name, CalculatePrice().ToString("#,#0"));
         }
 
         public int CompareTo(Menu other)

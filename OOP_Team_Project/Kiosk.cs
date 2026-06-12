@@ -67,7 +67,7 @@ namespace OOP_Team_Project
                     case 1:
                         Console.Clear();
                         menuManager.PrintCoffeeMenu();
-                        Console.Write("\n원하는 음료 번호 선택 =>\n0) 이전 페이지\n");
+                        Console.Write("\n원하는 음료 번호 선택 =>");
                         int chooseCoffee = GetIntInput();
                         if (chooseCoffee == 0) break;
                         Coffee original = (Coffee)menuManager.GetCoffee(chooseCoffee);
@@ -157,7 +157,7 @@ namespace OOP_Team_Project
 
                 return true;
             }
-            catch (InvalidOrderException ex) // 💥 의미 있는 사용자 정의 예외 처리 
+            catch (InvalidOrderException ex) // 의미 있는 사용자 정의 예외 처리 
             {
                 Console.WriteLine($"[결제 실패] {ex.Message}");
                  return false;
