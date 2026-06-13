@@ -58,6 +58,10 @@ public class CafeManagementSystem
                 {
                     CancelOrderRecord();
                 }
+                else if (input == "9")
+                {
+                    KioskOrderMenu();
+                }
                 else if (input == "0")
                 {
                     running = false;
@@ -87,6 +91,7 @@ public class CafeManagementSystem
         Console.WriteLine("6. 매출 리포트");
         Console.WriteLine("7. 카페 상태");
         Console.WriteLine("8. 주문 기록 취소");
+        Console.WriteLine("9. 손님 주문 (키오스크)");
         Console.WriteLine("0. 종료");
         Console.Write("선택: ");
     }
@@ -604,5 +609,85 @@ public class CafeManagementSystem
         Console.WriteLine();
         Console.Write("Enter...");
         Console.ReadLine();
+    }
+
+    private void KioskOrderMenu()
+    {
+        bool continueKiosk = true;
+
+        while (continueKiosk)
+        {
+            try
+            {
+                Console.Clear();
+                Console.WriteLine("==============================================");
+                Console.WriteLine("==============손님 주문 (키오스크)==============");
+                Console.WriteLine("==============================================\n");
+                Console.WriteLine("(메인 메뉴로 돌아가려면 'quit' 입력)\n");
+
+                // 손님 정보 입력
+                Console.Write("고객 이름: ");
+                string customerName = ReadInput("손님");
+
+                // quit 명령어 확인
+                if (customerName.ToLower() == "quit")
+                {
+                    Console.WriteLine("[취소] 키오스크를 나갑니다.");
+                    Wait();
+                    continueKiosk = false;
+                    return;
+                }
+
+                Console.Write("고객 전화번호: ");
+                string phone = ReadInput("없음");
+
+                Customer customer = new Customer(customerName, phone);
+
+                // 주문 유형 선택
+                OrderType orderType = SelectOrderType();
+
+                // Order 생성
+                Order order = new Order(nextOrderNumber, customer, orderType);
+
+                // Kiosk 실행
+                Kiosk kiosk = new Kiosk(cafe, customer);
+
+                if (kiosk.StartOrder(order))
+                {
+                    // 일회용품/텀블러 여부 선택
+                    if (orderType == OrderType.TakeOut || orderType == OrderType.Delivery)
+                    {
+                        Console.Write("\n일회용품 사용? (y/n): ");
+                        string disposableInput = ReadInput("n");
+                        order.SetUseDisposable(disposableInput == "y" || disposableInput == "Y");
+                    }
+
+                    // 주문 기록 저장
+                    cafe.ProcessOrder(order);
+                    nextOrderNumber++;
+
+                    Console.WriteLine("\n[완료] 주문이 성공적으로 처리되었습니다!");
+                    Console.WriteLine($"주문번호: {order.OrderNumber}");
+                    Console.WriteLine("\n아무 키나 누르면 다음 손님으로 이동합니다...");
+                    Console.ReadKey();
+                }
+                else
+                {
+                    Console.WriteLine("\n[취소] 주문이 취소되었습니다.");
+                    Console.WriteLine("아무 키나 누르면 다음 손님으로 이동합니다...");
+                    Console.ReadKey();
+                }
+            }
+            catch (InvalidOrderException ex)
+            {
+                Console.WriteLine($"[오류] {ex.Message}");
+                Wait();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[오류] 예상치 못한 오류: {ex.Message}");
+                Wait();
+            }
+        }
     }
 }
