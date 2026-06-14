@@ -80,7 +80,7 @@ public class Order : IDisplayable, IPriced
 
     public int OrderNumber => orderNumber;
     public Customer Customer => customer;
-    public List<OrderLine> Lines => lines;
+    public IReadOnlyList<OrderLine> Lines => lines;
     public OrderStatus Status => status;
     public OrderType Type => ordertype;
     public bool UseDisposable => useDisposable;
@@ -124,6 +124,17 @@ public class Order : IDisplayable, IPriced
     {
         OrderLine line = new OrderLine(menu, quantity);
         lines.Add(line);
+    }
+
+    public bool RemoveLineAt(int index)
+    {
+        if (index < 0 || index >= lines.Count)
+        {
+            return false;
+        }
+
+        lines.RemoveAt(index);
+        return true;
     }
 
     public bool CancelOrder(int orderNumber)

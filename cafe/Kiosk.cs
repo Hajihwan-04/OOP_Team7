@@ -85,7 +85,7 @@ public class Kiosk
 
     public static int GetIntInput()
     {
-        string input = Console.ReadLine();
+        string? input = Console.ReadLine();
         if (int.TryParse(input, out int inputI) == false)
         {
             return 0;
@@ -116,7 +116,7 @@ public class Kiosk
 
         if (deleteIndex > 0 && deleteIndex <= myOrder.LineCount)
         {
-            myOrder.Lines.RemoveAt(deleteIndex - 1);
+            myOrder.RemoveLineAt(deleteIndex - 1);
             Console.WriteLine("[시스템] 아이템이 삭제되었습니다.");
         }
         else
@@ -139,10 +139,20 @@ public class Kiosk
             Console.Write("\n결제 수단을 선택하세요 (1. 카드 / 2. 현금 / 0. 취소) => ");
             int payChoice = GetIntInput();
 
-            Payment payment = null;
-            if (payChoice == 1) payment = new CardPayment(myOrder.TotalPrice());
-            else if (payChoice == 2) payment = new CashPayment(myOrder.TotalPrice());
-            else return false;
+            Payment payment;
+
+            if (payChoice == 1)
+            {
+                payment = new CardPayment(myOrder.TotalPrice());
+            }
+            else if (payChoice == 2)
+            {
+                payment = new CashPayment(myOrder.TotalPrice());
+            }
+            else
+            {
+                return false;
+            }
 
             bool result = myOrder.Pay(payment);
             if (result)

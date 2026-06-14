@@ -649,19 +649,23 @@ public class CafeManagementSystem
                 // Order 생성
                 Order order = new Order(nextOrderNumber, customer, orderType);
 
+                // 키오스크 안에서 결제까지 진행되므로, 가격에 영향을 주는 옵션은 결제 전에 먼저 정한다.
+                if (orderType == OrderType.TakeOut || orderType == OrderType.Delivery)
+                {
+                    Console.Write("\n일회용품 사용? (y/n): ");
+                    string disposableInput = ReadInput("n");
+                    order.SetUseDisposable(disposableInput == "y" || disposableInput == "Y");
+                }
+
+                Console.Write("개인 텀블러 사용? (y/n): ");
+                string tumblerInput = ReadInput("n");
+                order.SetUseTumbler(tumblerInput == "y" || tumblerInput == "Y");
+
                 // Kiosk 실행
                 Kiosk kiosk = new Kiosk(cafe, customer);
 
                 if (kiosk.StartOrder(order))
                 {
-                    // 일회용품/텀블러 여부 선택
-                    if (orderType == OrderType.TakeOut || orderType == OrderType.Delivery)
-                    {
-                        Console.Write("\n일회용품 사용? (y/n): ");
-                        string disposableInput = ReadInput("n");
-                        order.SetUseDisposable(disposableInput == "y" || disposableInput == "Y");
-                    }
-
                     // 주문 기록 저장
                     cafe.ProcessOrder(order);
                     nextOrderNumber++;
